@@ -13,6 +13,7 @@ by controlling access privileges.
 USE Assiment_week4_test2;
 GO
 
+ --   part 3
 --==============================================================
 -- 1. CREATE PUBLIC VIEWS FOR SIMULATION
 --==============================================================
