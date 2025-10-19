@@ -1,1 +1,78 @@
+WEEK 4 Assignment — Access Control & Inference Control
+Part 1 — DAC Implementation (Discretionary Access Control)
+Tasks:
+1.	Create SQL Server logins for user_public and user_admin.
+2.	Map them to users in the database (general, admin1).
+3.	Create roles: public_role and admin_role.
+4.	Grant limited access to public_role and full access to admin_role.
+5.	Test access by executing queries as both users.
+6.	Create a scenario where a user in public_role indirectly gains access to a restricted table through a view or inherited permission.
+o	Explain how the attack works.
+o	Explain how to fix it.
+How to do it :
+•	Use SQL Server Management Studio (SSMS) → Security → Logins to create new logins.
+•	Map each login to a database user through User Mapping.
+•	Create database roles under Database → Security → Roles → Database Roles.
+•	Use GRANT / REVOKE to manage permissions (e.g., SELECT, INSERT, UPDATE).
+•	Test each user’s access by connecting as that user.
+•	For the indirect access part, create a view that joins a sensitive table with a public one and see how information can leak. Then think of ways to prevent it (e.g., removing CREATE VIEW privilege).
+________________________________________
+Part 2 — RBAC Implementation (Role-Based Access Control)
+Tasks:
+1.	Create two roles: read_onlyX and insert_onlyX.
+2.	Assign users to these roles.
+3.	Use GRANT and REVOKE to enforce the least privilege principle.
+4.	Verify that each role has only the intended permissions.
+5.	Create a composite role power_user that inherits privileges from both read_onlyX and insert_onlyX.
+6.	Assign a user to power_user, test privileges, then REVOKE one underlying role and observe the change.
+How to do it:
+•	Think of each role as a “job function” with specific rights.
+•	Define which SQL commands each role can execute.
+•	Test by logging in as users assigned to different roles.
+•	Use role inheritance to show how combined roles work.
+________________________________________
+Part 3 — Inference Attack Simulation
+Tasks:
+•	Demonstrate how a user without direct access can infer sensitive data by aligning ordered results from two public views (e.g., vPublicNames and vPublicSalaries).
+How to do it:
+•	Create one view that shows only employee names.
+•	Create another that shows only salaries (no names).
+•	Sort both views the same way (e.g., ORDER BY EmpID or alphabetically).
+•	Show that by comparing the order, a user can deduce which salary belongs to which employee.
+________________________________________
+Part 4 — Inference Control by Randomization
+Tasks:
+1.	Regenerate public IDs using NEWID().
+2.	Restrict access to the AdminMap table.
+3.	Deny CREATE VIEW to public_role.
+4.	Verify that the inference attack from Part 3 no longer works.
+How to do it:
+•	Randomize identifiers to break the link between public and private tables.
+•	Recheck user access permissions.
+•	Try running the same inference steps — the mapping should now fail.
+________________________________________
+Part 5 — Functional Dependency Inference
+Given FDs:
+•	FD₁: EmpID → Dept
+•	FD₂: Title → Grade
+•	FD₃: Dept, Grade → Bonus
+Tasks:
+1.	Compute the closure Q⁺ of {Dept, Title}.
+2.	Show whether Bonus ∈ Q⁺.
+3.	Decide whether to reject or modify the query based on the result.
+How to do it:
+•	Use the closure computation process (add all attributes derivable from the set).
+•	If Bonus is derivable, that means it can be inferred, so access should be restricted or anonymized.
+________________________________________
+Part 6 — Inference via Aggregates
+Tasks:
+1.	Use AVG() views that include and exclude a target user to infer sensitive data.
+2.	Demonstrate how comparing two averages reveals individual values.
+3.	Apply K-anonymity (e.g., K=3) to prevent such inference.
+4.	Show that after applying protection, the inference attack no longer works.
+How to do it:
+•	Create aggregate queries that show average salaries.
+•	Remove one record and calculate again — note if the difference reveals a single user’s value.
+•	Modify your query rules so that no aggregate result is shown unless the group size ≥ K.
+
 
