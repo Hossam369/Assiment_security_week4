@@ -18,13 +18,15 @@ GO
 -- 1. CREATE PUBLIC VIEWS FOR SIMULATION
 --==============================================================
 CREATE VIEW dbo.vPublicNamesS AS
-SELECT FullName
-FROM dbo.Employees;
+SELECT TOP 100 PERCENT FullName
+FROM dbo.Employees
+ORDER BY EmpID;
 GO
 
 CREATE VIEW dbo.vPublicSalaries AS
-SELECT Salary
-FROM dbo.Employees;
+SELECT TOP 100 PERCENT Salary
+FROM dbo.Employees
+ORDER BY EmpID;
 GO
 
 --==============================================================
